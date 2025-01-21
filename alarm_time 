@@ -1,0 +1,48 @@
+from datetime import datetime  # Import the datetime module to work with dates and times
+import time  # Import the time module to use sleep for delays
+
+# Main function to set and check the alarm
+def set_alarm():
+    # Prompt the user to enter the alarm time in a specific format
+    alarm_time = input("Enter the time of alarm to be set (HH:MM:SS AM/PM):\n")
+    
+    # Validate the input format using datetime.strptime
+    try:
+        datetime.strptime(alarm_time, "%I:%M:%S %p")  # Ensures the format is HH:MM:SS AM/PM
+    except ValueError:
+        # If the format is incorrect, print an error message and exit the function
+        print("Invalid time format. Please use HH:MM:SS AM/PM.")
+        return
+
+    # Extract the hour, minute, second, and period (AM/PM) from the input string
+    alarm_hour = alarm_time[0:2]  # First two characters for the hour
+    alarm_minute = alarm_time[3:5]  # Characters at index 3-4 for the minute
+    alarm_seconds = alarm_time[6:8]  # Characters at index 6-7 for the second
+    alarm_period = alarm_time[9:11].upper()  # Characters at index 9-10 for AM/PM (converted to uppercase)
+
+    print("Setting up alarm...")  # Inform the user that the alarm is being set
+
+    # Infinite loop to constantly check the current time
+    while True:
+        # Get the current time
+        now = datetime.now()
+        current_hour = now.strftime("%I")  # Get the current hour in 12-hour format
+        current_minute = now.strftime("%M")  # Get the current minute
+        current_seconds = now.strftime("%S")  # Get the current second
+        current_period = now.strftime("%p")  # Get the current period (AM/PM)
+
+        # Check if the current time matches the alarm time
+        if (
+            alarm_period == current_period and  # Check if AM/PM matches
+            alarm_hour == current_hour and  # Check if the hour matches
+            alarm_minute == current_minute and  # Check if the minute matches
+            alarm_seconds == current_seconds  # Check if the second matches
+        ):
+            print("Wake Up!")  # Print the wake-up message when the alarm time is reached
+            break  # Exit the loop since the alarm has triggered
+        
+        time.sleep(1)  # Wait for 1 second before checking the time again (reduces CPU usage)
+
+# Run the main function only if this script is executed directly
+if __name__ == "__main__":
+    set_alarm()
